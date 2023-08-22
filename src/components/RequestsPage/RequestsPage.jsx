@@ -55,9 +55,9 @@ function RequestsPage() {
                   {req.cityFrom}
                 </TableCell>
                 <TableCell align="right">{req.cityTo}</TableCell>
-                <TableCell align="right">{req.typeOfParcel ? req.typeOfParcel : ' ' }</TableCell>
+                <TableCell align="right">{req.typeOfParcel || ' ' }</TableCell>
                 <TableCell align="right">{req.date}</TableCell>
-                <TableCell align="right">{req.description ? req.description : ' '}</TableCell>
+                <TableCell align="right">{req.description || ' '}</TableCell>
               </TableRow>
             ))}
           </TableBody>

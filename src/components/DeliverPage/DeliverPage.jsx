@@ -6,10 +6,12 @@ import { Button } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useOutletContext } from 'react-router-dom';
 import { addRequest } from '../../store/actions';
 
 function DeliverPage() {
   const dispatch = useDispatch();
+  const { id, setId } = useOutletContext();
   const [cityFrom, setCityFrom] = useState('');
   const [cityTo, setCityTo] = useState('');
   const [date, setDate] = useState('');
@@ -17,16 +19,24 @@ function DeliverPage() {
   const dispatchRequest = () => {
     dispatch(addRequest(
       {
+        id,
         cityFrom,
         cityTo,
         date,
       },
     ));
   };
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    setId(id + 1);
+    dispatchRequest();
+  }
+
   return (
     <form
       className="form__wrapper"
-      onSubmit={(e) => { e.preventDefault(); dispatchRequest(); }}
+      onSubmit={(e) => { handleSubmit(e); }}
     >
       <FormLabel className="form__label">Form to create deliver</FormLabel>
       <TextField

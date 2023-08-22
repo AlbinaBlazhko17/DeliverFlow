@@ -1,14 +1,23 @@
-import { Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
+import { Outlet, Route, Routes } from 'react-router-dom';
+import routesConfig from '../../routes/routesConfig';
 import Header from '../Header/Header';
 import './App.css';
-import routesConfig from '../../routes/routesConfig';
 
 function App() {
+  const [id, setId] = useState(0);
   return (
     <>
       <Header />
       <Routes>
-        {
+        <Route
+          element={(
+            <Outlet
+              context={{ id, setId }}
+            />
+            )}
+        >
+          {
           routesConfig.map((route, index) => (
             <Route
               key={index}
@@ -17,7 +26,9 @@ function App() {
             />
           ))
         }
+        </Route>
       </Routes>
+      <Outlet context={{ hello: 'world' }} />
     </>
   );
 }
