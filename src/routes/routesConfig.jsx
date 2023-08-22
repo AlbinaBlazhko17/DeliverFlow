@@ -1,6 +1,7 @@
 import CreatePage from '../components/CreatePage/CreatePage';
 import OrderPage from '../components/OrderPage/OrderPage';
 import DeliverPage from '../components/DeliverPage/DeliverPage';
+import RequestsPage from '../components/RequestsPage/RequestsPage';
 
 const routesConfig = [
   {
@@ -19,10 +20,10 @@ const routesConfig = [
     path: '/create/deliver',
     element: <DeliverPage />,
   },
-  // {
-  //   path: '/requests',
-  //   element: <RequestsPage />,
-  // },
+  {
+    path: '/requests',
+    element: <RequestsPage />,
+  },
   // {
   //   path: '*',
   //   element: <NotFoundPage />,
