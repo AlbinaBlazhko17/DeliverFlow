@@ -1,13 +1,16 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './components/app/App.jsx'
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import './index.css'
+import ReactDOM from 'react-dom/client';
+import { StyledEngineProvider } from '@mui/material/styles';
+import App from './components/app/App';
+import './main.scss';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <StyledEngineProvider injectFirst>
+        <App />
+      </StyledEngineProvider>
     </BrowserRouter>
   </React.StrictMode>,
-)
+);

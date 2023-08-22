@@ -4,33 +4,33 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import { Link } from 'react-router-dom';
 
-const navItems = ['Order', 'Deliver', 'List'];
+import './styles.scss';
 
 function DrawerAppBar() {
-
   return (
-    <Box sx={{ display: 'flex' }}>
+    <div className="header__wrapper">
       <CssBaseline />
-      <AppBar component="nav" sx={{ backgroundColor: '#75ABBC' }}>
+      <AppBar component="nav" sx={{ backgroundColor: '#FF5964' }}>
         <Toolbar>
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }, textAlign: 'left', color: '#DFE0E2' }}
+            sx={{
+              flexGrow: 1, display: { xs: 'none', sm: 'block' }, textAlign: 'left', color: '#5e5e5e',
+            }}
           >
-            Delivery Flow
+            <Link className="link" to="/create">Deliver Flow</Link>
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            {navItems.map((item) => (
-              <Button key={item} sx={{ color: '#DFE0E2' }}>
-                {item}
-              </Button>
-            ))}
+            <Link className="link" to="/create/order"><Button sx={{ color: '#5e5e5e' }}>Order</Button></Link>
+
+            <Link className="link" to="/create/deliver"><Button sx={{ color: '#5e5e5e' }}> Deliver </Button></Link>
           </Box>
         </Toolbar>
       </AppBar>
-    </Box>
+    </div>
   );
 }
 

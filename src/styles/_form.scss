@@ -1,0 +1,14 @@
+.form {
+	&__wrapper {
+		height: 50vh;
+		width: 40vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+		margin: 0 auto;
+	}
+	&__label {
+		font-size: 30px;
+		font-weight: bold;
+	}
+}
