@@ -6,20 +6,33 @@ import { Button } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useOutletContext } from 'react-router-dom';
 import { addRequest } from '../../store/actions';
+import AlertDialog from '../AlertDialog/AlertDialog';
 
 function DeliverPage() {
   const dispatch = useDispatch();
-  const { id, setId } = useOutletContext();
   const [cityFrom, setCityFrom] = useState('');
   const [cityTo, setCityTo] = useState('');
   const [date, setDate] = useState('');
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  function cleanInput() {
+    setCityFrom('');
+    setCityTo('');
+    setDate(null);
+  }
 
   const dispatchRequest = () => {
     dispatch(addRequest(
       {
-        id,
         cityFrom,
         cityTo,
         date,
@@ -29,8 +42,9 @@ function DeliverPage() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    setId(id + 1);
+    cleanInput();
     dispatchRequest();
+    handleClickOpen();
   }
 
   return (
@@ -67,6 +81,7 @@ function DeliverPage() {
         />
       </LocalizationProvider>
       <Button className="button button-submit" variant="contained" type="submit">Submit</Button>
+      <AlertDialog open={open} handleClose={handleClose} />
     </form>
   );
 }

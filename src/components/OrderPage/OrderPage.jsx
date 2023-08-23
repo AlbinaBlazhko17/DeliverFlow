@@ -6,24 +6,29 @@ import { Button } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useOutletContext } from 'react-router-dom';
 import { addRequest } from '../../store/actions';
-
-import './styles.scss';
+import AlertDialog from '../AlertDialog/AlertDialog';
 
 function OrderPage() {
   const dispatch = useDispatch();
-  const { id, setId } = useOutletContext();
   const [cityFrom, setCityFrom] = useState('');
   const [cityTo, setCityTo] = useState('');
   const [typeOfParcel, setTypeOfParcel] = useState('');
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const dispatchRequest = () => {
     dispatch(addRequest(
       {
-        id,
         cityFrom,
         cityTo,
         typeOfParcel,
@@ -33,10 +38,19 @@ function OrderPage() {
     ));
   };
 
+  function cleanInput() {
+    setCityFrom('');
+    setCityTo('');
+    setTypeOfParcel('');
+    setDate(null);
+    setDescription('');
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
-    setId(id + 1);
+    cleanInput();
     dispatchRequest();
+    handleClickOpen();
   }
 
   return (
@@ -89,6 +103,7 @@ function OrderPage() {
         onInput={(e) => setDescription(e.target.value)}
       />
       <Button className="button button-submit" variant="contained" type="submit">Submit</Button>
+      <AlertDialog open={open} handleClose={handleClose} />
     </form>
   );
 }
