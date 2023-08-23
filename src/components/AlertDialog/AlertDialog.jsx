@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import propTypes from 'prop-types';
+// import propTypes from 'prop-types';
 
 export default function AlertDialog(props) {
   const { open, handleClose } = props;
@@ -37,12 +37,12 @@ export default function AlertDialog(props) {
   );
 }
 
-AlertDialog.defaultProps = {
-  open: false,
-  handleClose: null,
-};
+// AlertDialog.defaultProps = {
+//   open: false,
+//   handleClose: null,
+// };
 
-AlertDialog.propTypes = {
-  open: propTypes.bool,
-  handleClose: propTypes.func,
-};
+// AlertDialog.propTypes = {
+//   open: propTypes.bool,
+//   handleClose: propTypes.func,
+// };

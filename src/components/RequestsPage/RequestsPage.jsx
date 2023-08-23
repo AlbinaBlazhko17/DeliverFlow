@@ -9,24 +9,54 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import UpdateDialog from '../UpdateDialog/UpdateDialog';
+import { removeRequest } from '../../store/actions';
 
 function RequestsPage() {
+  const dispatch = useDispatch();
   const [requests, setRequests] = useState({});
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState({});
   const storeData = {};
+  let i = 0;
+
+  const handleClickOpen = (nestedItem, key) => {
+    setSelected({ ...nestedItem, id: key });
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   for (let i = 0; i < localStorage.length; i++) {
-    const key = Number(localStorage.key(i));
-    if (!isNaN(key)) {
-      const value = JSON.parse(localStorage.getItem(key));
-      storeData[key] = value;
-    }
+    const key = localStorage.key(i);
+    const value = JSON.parse(localStorage.getItem(key));
+    storeData[key] = value;
   }
 
   useEffect(() => {
-    if (!(Object.keys(storeData).length === 0)) {
+    if (
+      !(Object.keys(storeData).length === 0)
+      && JSON.stringify(storeData) !== JSON.stringify(requests)
+    ) {
       setRequests(storeData);
     }
-  }, []);
+  }, [storeData, requests]);
+
+  const handleDispatcher = (key) => {
+    dispatch(removeRequest(
+      {
+        id: key,
+      },
+    ));
+    setRequests((prevRequests) => {
+      const newRequests = { ...prevRequests };
+      delete newRequests[key];
+      return newRequests;
+    });
+  };
 
   return (
     <>
@@ -52,28 +82,29 @@ function RequestsPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.keys(requests).map((key) => {
+            {!(Object.keys(requests).length === 0) && Object.keys(requests).map((key) => {
               const nestedItem = requests[key];
+              i += 1;
               return (
                 <TableRow
                   key={key}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">
-                    {key}
+                  <TableCell component="th" scope="row" align="center">
+                    {i}
                   </TableCell>
-                  <TableCell align="right">{nestedItem.cityFrom}</TableCell>
-                  <TableCell align="right">{nestedItem.cityTo}</TableCell>
-                  <TableCell align="right">{nestedItem.typeOfParcel || ' ' }</TableCell>
-                  <TableCell align="right">{nestedItem.date}</TableCell>
-                  <TableCell align="right">{nestedItem.description || ' '}</TableCell>
+                  <TableCell align="center">{nestedItem.cityFrom}</TableCell>
+                  <TableCell align="center">{nestedItem.cityTo}</TableCell>
+                  <TableCell align="center">{nestedItem.typeOfParcel || ' ' }</TableCell>
+                  <TableCell align="center">{nestedItem.date}</TableCell>
+                  <TableCell align="center">{nestedItem.description || ' '}</TableCell>
+                  <TableCell align="center">
+                    {' '}
+                    <Button className="button button-table" variant="contained" onClick={() => handleClickOpen(nestedItem, key)}>Update</Button>
+                  </TableCell>
                   <TableCell align="right">
                     {' '}
-                    <Button className="button button-table" variant="contained">Update</Button>
-                  </TableCell>
-                  <TableCell align="right">
-                    {' '}
-                    <Button className="button button-table" variant="contained">Delete</Button>
+                    <Button className="button button-table" variant="contained" onClick={() => { handleDispatcher(key); }}>Delete</Button>
                   </TableCell>
                 </TableRow>
               );
@@ -81,6 +112,7 @@ function RequestsPage() {
           </TableBody>
         </Table>
       </TableContainer>
+      <UpdateDialog open={open} handleClose={handleClose} nestedItem={selected} />
     </>
   );
 }

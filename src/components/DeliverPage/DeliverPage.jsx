@@ -1,20 +1,29 @@
 import { useDispatch } from 'react-redux';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import FormLabel from '@mui/material/FormLabel';
 import { Button } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { addRequest } from '../../store/actions';
+import { v4 as uuidv4 } from 'uuid';
+import { addRequest, updateRequest } from '../../store/actions';
 import AlertDialog from '../AlertDialog/AlertDialog';
 
-function DeliverPage() {
+function DeliverPage({ type = 'create', nestedItem, closeDialog }) {
   const dispatch = useDispatch();
   const [cityFrom, setCityFrom] = useState('');
   const [cityTo, setCityTo] = useState('');
   const [date, setDate] = useState('');
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (nestedItem) {
+      setCityFrom(nestedItem.cityFrom);
+      setCityTo(nestedItem.cityTo);
+      setDate(nestedItem.date);
+    }
+  }, [nestedItem]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -31,20 +40,31 @@ function DeliverPage() {
   }
 
   const dispatchRequest = () => {
-    dispatch(addRequest(
-      {
-        cityFrom,
-        cityTo,
-        date,
-      },
-    ));
-  };
+    const newItem = {
+      type: 'delivery',
+      cityFrom,
+      cityTo,
+      date,
+    };
 
+    if (type === 'create') {
+      const newItemWithId = { ...newItem, id: uuidv4() };
+      dispatch(addRequest(newItemWithId));
+    }
+    if (type === 'update') {
+      const updatedItem = { ...nestedItem, ...newItem };
+      dispatch(updateRequest(updatedItem));
+    }
+  };
   function handleSubmit(e) {
     e.preventDefault();
     cleanInput();
     dispatchRequest();
-    handleClickOpen();
+    if (type === 'update') {
+      closeDialog();
+    } else {
+      handleClickOpen();
+    }
   }
 
   return (
@@ -52,7 +72,13 @@ function DeliverPage() {
       className="form__wrapper"
       onSubmit={(e) => { handleSubmit(e); }}
     >
-      <FormLabel className="form__label">Form to create deliver</FormLabel>
+      <FormLabel className="form__label">
+        Form to
+        {' '}
+        {type}
+        {' '}
+        delivery
+      </FormLabel>
       <TextField
         id="filled-basic"
         label="City from"

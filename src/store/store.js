@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-// import { setLocalStorage } from '../utils/localStorage';
+import { v4 as uuidv4 } from 'uuid';
 import rootReducer from './reducers';
 
 const store = configureStore(
@@ -8,12 +8,13 @@ const store = configureStore(
 );
 
 store.subscribe(() => {
-  const data = store.getState().localData.results;
-  // console.log(data);
-  data.forEach((item) => {
-    const itemKey = `${item.id}`;
-    localStorage.setItem(itemKey, JSON.stringify(item));
-  });
+  const state = store.getState();
+  if (state.localData && state.localData.results) {
+    const data = state.localData.results;
+    data.forEach((item) => {
+      localStorage.setItem(item.id, JSON.stringify(item));
+    });
+  }
 });
 
 export default store;

@@ -1,15 +1,17 @@
 import { useDispatch } from 'react-redux';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import FormLabel from '@mui/material/FormLabel';
 import { Button } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { addRequest } from '../../store/actions';
+import propTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
+import { addRequest, updateRequest } from '../../store/actions';
 import AlertDialog from '../AlertDialog/AlertDialog';
 
-function OrderPage() {
+function OrderPage({ type = 'create', nestedItem, closeDialog }) {
   const dispatch = useDispatch();
   const [cityFrom, setCityFrom] = useState('');
   const [cityTo, setCityTo] = useState('');
@@ -17,6 +19,16 @@ function OrderPage() {
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (nestedItem) {
+      setCityFrom(nestedItem.cityFrom);
+      setCityTo(nestedItem.cityTo);
+      setDate(nestedItem.date);
+      setTypeOfParcel(nestedItem.typeOfParcel);
+      setDescription(nestedItem.description);
+    }
+  }, [nestedItem]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -27,15 +39,23 @@ function OrderPage() {
   };
 
   const dispatchRequest = () => {
-    dispatch(addRequest(
-      {
-        cityFrom,
-        cityTo,
-        typeOfParcel,
-        date,
-        description,
-      },
-    ));
+    const newItem = {
+      type: 'order',
+      cityFrom,
+      cityTo,
+      typeOfParcel,
+      date,
+      description,
+    };
+
+    if (type === 'create') {
+      const newItemWithId = { ...newItem, id: uuidv4() };
+      dispatch(addRequest(newItemWithId));
+    }
+    if (type === 'update') {
+      const updatedItem = { ...nestedItem, ...newItem };
+      dispatch(updateRequest(updatedItem));
+    }
   };
 
   function cleanInput() {
@@ -50,7 +70,11 @@ function OrderPage() {
     e.preventDefault();
     cleanInput();
     dispatchRequest();
-    handleClickOpen();
+    if (type === 'update') {
+      closeDialog();
+    } else {
+      handleClickOpen();
+    }
   }
 
   return (
@@ -58,7 +82,13 @@ function OrderPage() {
       className="form__wrapper"
       onSubmit={(e) => { handleSubmit(e); }}
     >
-      <FormLabel className="form__label">Form to create order</FormLabel>
+      <FormLabel className="form__label" sx={{ margin: '0 auto' }}>
+        Form to
+        {' '}
+        {type}
+        {' '}
+        order
+      </FormLabel>
       <TextField
         id="cityFrom"
         label="City from"
