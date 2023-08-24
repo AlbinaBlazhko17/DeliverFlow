@@ -46,7 +46,7 @@ UpdateDialog.propTypes = {
     typeOfParcel: propTypes.string,
     description: propTypes.string,
   }),
-  sortType: 'creation',
+  sortType: propTypes.string,
 };
 
 export default UpdateDialog;
