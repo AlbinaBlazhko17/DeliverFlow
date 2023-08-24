@@ -3,8 +3,7 @@ import { Dialog, DialogTitle, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 // import propTypes from 'prop-types';
 
-export default function AlertDialog(props) {
-  const { open, handleClose } = props;
+export default function AlertDialog({ open, handleClose, error }) {
   return (
     <div>
       <Dialog
@@ -14,7 +13,9 @@ export default function AlertDialog(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle sx={{ m: 5, p: 2 }} id="customized-dialog-title">
-          Request successfuly saved!
+          {
+              error ? 'Bad date!' : 'Request successfuly saved!'
+          }
           {open ? (
             <IconButton
               aria-label="close"

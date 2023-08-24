@@ -18,6 +18,7 @@ function OrderPage({
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState(false);
   const data = useSelector((state) => state.localData.results);
 
   useEffect(() => {
@@ -49,7 +50,7 @@ function OrderPage({
       dateOfCreation: new Date().toLocaleDateString('fr-FR'),
     };
 
-    if (type === 'create') {
+    if (type === 'create' && error === false) {
       const newItemWithId = { ...newItem, id: uuidv4() };
       dispatch(addRequest(newItemWithId));
     }
@@ -127,10 +128,15 @@ function OrderPage({
         <DatePicker
           id="date"
           format="DD-MM-YYYY"
-          value={date}
+          value={date || null}
           onChange={(newDate) => {
-            const d = new Date(newDate).toLocaleDateString('fr-FR');
-            setDate(d);
+            if (isValid(newDate)) {
+              const d = new Date(newDate).toLocaleDateString('fr-FR');
+              setDate(d);
+              setError(false);
+            } else {
+              setError(true);
+            }
           }}
         />
       </LocalizationProvider>
@@ -144,7 +150,7 @@ function OrderPage({
         onInput={(e) => setDescription(e.target.value)}
       />
       <Button className="button button-submit" variant="contained" type="submit">Submit</Button>
-      <AlertDialog open={open} handleClose={handleClose} />
+      <AlertDialog open={open} handleClose={handleClose} error={error} />
     </form>
   );
 }
