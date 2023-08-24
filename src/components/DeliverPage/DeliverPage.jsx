@@ -1,18 +1,24 @@
 import { Button, FormLabel, TextField } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { isValid } from 'date-fns';
+import propTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-import { addRequest, updateRequest } from '../../store/actions';
+import { addRequest, sortRequests, updateRequest } from '../../store/actions';
 import AlertDialog from '../AlertDialog/AlertDialog';
 
-function DeliverPage({ type = 'create', nestedItem, closeDialog }) {
+function DeliverPage({
+  type, nestedItem, closeDialog, sortType,
+}) {
   const dispatch = useDispatch();
   const [cityFrom, setCityFrom] = useState('');
   const [cityTo, setCityTo] = useState('');
   const [date, setDate] = useState('');
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState(false);
+  const data = useSelector((state) => state.localData.results);
 
   useEffect(() => {
     if (nestedItem) {
@@ -45,13 +51,23 @@ function DeliverPage({ type = 'create', nestedItem, closeDialog }) {
       dateOfCreation: new Date().toLocaleDateString('fr-FR'),
     };
 
-    if (type === 'create') {
+    if (type === 'create' && error === false) {
       const newItemWithId = { ...newItem, id: uuidv4() };
       dispatch(addRequest(newItemWithId));
     }
     if (type === 'update') {
       const updatedItem = { ...nestedItem, ...newItem };
-      dispatch(updateRequest(updatedItem));
+      const updatedIndex = data.findIndex((item) => item.id === updatedItem.id);
+
+      if (updatedIndex !== -1) {
+        const updatedData = [
+          ...data.slice(0, updatedIndex),
+          updatedItem,
+          ...data.slice(updatedIndex + 1),
+        ];
+        dispatch(updateRequest(updatedItem));
+        dispatch(sortRequests({ sortType, requests: updatedData }));
+      }
     }
   };
   function handleSubmit(e) {
@@ -99,8 +115,13 @@ function DeliverPage({ type = 'create', nestedItem, closeDialog }) {
           format="DD-MM-YYYY"
           value={date}
           onChange={(newDate) => {
-            const d = new Date(newDate).toLocaleDateString('fr-FR');
-            setDate(d);
+            if (isValid(newDate)) {
+              const d = new Date(newDate).toLocaleDateString('fr-FR');
+              setDate(d);
+              setError(false);
+            } else {
+              setError(true);
+            }
           }}
         />
       </LocalizationProvider>
@@ -109,5 +130,23 @@ function DeliverPage({ type = 'create', nestedItem, closeDialog }) {
     </form>
   );
 }
+
+DeliverPage.defaultProps = {
+  type: 'create',
+  nestedItem: {},
+  closeDialog: null,
+  sortType: 'creation',
+};
+
+DeliverPage.propTypes = {
+  type: propTypes.string,
+  nestedItem: propTypes.shape({
+    cityFrom: propTypes.string,
+    cityTo: propTypes.string,
+    date: propTypes.string,
+  }),
+  closeDialog: propTypes.func,
+  sortType: propTypes.string,
+};
 
 export default DeliverPage;

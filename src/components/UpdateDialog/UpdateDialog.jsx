@@ -1,8 +1,9 @@
-import React from 'react';
 import {
   Dialog,
   DialogContent,
 } from '@mui/material';
+import propTypes from 'prop-types';
+import React from 'react';
 import DeliverPage from '../DeliverPage/DeliverPage';
 import OrderPage from '../OrderPage/OrderPage';
 
@@ -27,5 +28,25 @@ function UpdateDialog(props) {
     </Dialog>
   );
 }
+
+UpdateDialog.defaultProps = {
+  open: false,
+  handleClose: null,
+  nestedItem: {},
+  sortType: 'creation',
+};
+
+UpdateDialog.propTypes = {
+  open: propTypes.bool,
+  handleClose: propTypes.func,
+  nestedItem: propTypes.shape({
+    cityFrom: propTypes.string,
+    cityTo: propTypes.string,
+    date: propTypes.string,
+    typeOfParcel: propTypes.string,
+    description: propTypes.string,
+  }),
+  sortType: 'creation',
+};
 
 export default UpdateDialog;

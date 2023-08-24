@@ -5,11 +5,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import propTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
+import { isValid } from 'date-fns';
 import { addRequest, updateRequest, sortRequests } from '../../store/actions';
 import AlertDialog from '../AlertDialog/AlertDialog';
 
 function OrderPage({
-  type = 'create', nestedItem, closeDialog, sortType,
+  type, nestedItem, closeDialog, sortType,
 }) {
   const dispatch = useDispatch();
   const [cityFrom, setCityFrom] = useState('');
@@ -154,5 +155,25 @@ function OrderPage({
     </form>
   );
 }
+
+OrderPage.defaultProps = {
+  type: 'create',
+  nestedItem: {},
+  closeDialog: null,
+  sortType: 'creation',
+};
+
+OrderPage.propTypes = {
+  type: propTypes.string,
+  nestedItem: propTypes.shape({
+    cityFrom: propTypes.string,
+    cityTo: propTypes.string,
+    date: propTypes.string,
+    typeOfParcel: propTypes.string,
+    description: propTypes.string,
+  }),
+  closeDialog: propTypes.func,
+  sortType: propTypes.string,
+};
 
 export default OrderPage;

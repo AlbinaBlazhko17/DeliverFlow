@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Dialog, DialogTitle, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-// import propTypes from 'prop-types';
+import propTypes from 'prop-types';
 
 export default function AlertDialog({ open, handleClose, error }) {
   return (
@@ -36,12 +36,12 @@ export default function AlertDialog({ open, handleClose, error }) {
   );
 }
 
-// AlertDialog.defaultProps = {
-//   open: false,
-//   handleClose: null,
-// };
+AlertDialog.defaultProps = {
+  open: false,
+  handleClose: null,
+};
 
-// AlertDialog.propTypes = {
-//   open: propTypes.bool,
-//   handleClose: propTypes.func,
-// };
+AlertDialog.propTypes = {
+  open: propTypes.bool,
+  handleClose: propTypes.func,
+};
