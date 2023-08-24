@@ -1,11 +1,8 @@
-import { useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import FormLabel from '@mui/material/FormLabel';
-import { Button } from '@mui/material';
+import { Button, FormLabel, TextField } from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import { addRequest, updateRequest } from '../../store/actions';
 import AlertDialog from '../AlertDialog/AlertDialog';
@@ -45,6 +42,7 @@ function DeliverPage({ type = 'create', nestedItem, closeDialog }) {
       cityFrom,
       cityTo,
       date,
+      dateOfCreation: new Date().toLocaleDateString('fr-FR'),
     };
 
     if (type === 'create') {

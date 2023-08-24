@@ -1,25 +1,25 @@
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  NativeSelect,
+  Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
+} from '@mui/material';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeRequest, sortRequests } from '../../store/actions';
 import UpdateDialog from '../UpdateDialog/UpdateDialog';
-import { removeRequest } from '../../store/actions';
 
 function RequestsPage() {
   const dispatch = useDispatch();
-  const [requests, setRequests] = useState({});
+  const [requests, setRequests] = useState([]);
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState({});
-  const storeData = {};
-  let i = 0;
+  const [sortType, setSortType] = useState('creation');
+  const storeData = useSelector((state) => state.localData.results);
+  console.log(storeData);
 
   const handleClickOpen = (nestedItem, key) => {
     setSelected({ ...nestedItem, id: key });
@@ -30,18 +30,30 @@ function RequestsPage() {
     setOpen(false);
   };
 
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    const value = JSON.parse(localStorage.getItem(key));
-    storeData[key] = value;
-  }
+  const handleFilterChange = (event) => {
+    const selectedSortType = event.target.value;
+    setSortType(selectedSortType);
+  };
+
+  useEffect(() => {
+    // if (Object.keys(requests).length === 0) {
+    dispatch(sortRequests({ sortType, requests: storeData }));
+    // } else {
+    // dispatch(sortRequests({ sortType, requests }));
+    // }
+  }, [dispatch, sortType]);
+
+  useEffect(() => {
+    setRequests(storeData);
+  }, []);
 
   useEffect(() => {
     if (
-      !(Object.keys(storeData).length === 0)
-      && JSON.stringify(storeData) !== JSON.stringify(requests)
+      // !(Object.keys(storeData).length === 0)
+      JSON.stringify(storeData) !== JSON.stringify(requests)
     ) {
       setRequests(storeData);
+      console.log('Updated');
     }
   }, [storeData, requests]);
 
@@ -52,9 +64,9 @@ function RequestsPage() {
       },
     ));
     setRequests((prevRequests) => {
-      const newRequests = { ...prevRequests };
-      delete newRequests[key];
-      return newRequests;
+      const newRequests = [...prevRequests];
+      const updatedRequests = newRequests.filter((item) => item.id !== key);
+      return updatedRequests;
     });
   };
 
@@ -69,6 +81,24 @@ function RequestsPage() {
       >
         List of requests
       </Typography>
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl sx={{ float: 'right', marginBottom: '20px' }}>
+          <InputLabel variant="standard" htmlFor="uncontrolled-native">
+            filter
+          </InputLabel>
+          <NativeSelect
+            defaultValue="creation"
+            inputProps={{
+              name: 'Filter',
+              id: 'uncontrolled-native',
+            }}
+            onChange={handleFilterChange}
+          >
+            <option value="creation">by the date of creation</option>
+            <option value="dispatch">by the date of dispatch</option>
+          </NativeSelect>
+        </FormControl>
+      </Box>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -82,33 +112,29 @@ function RequestsPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {!(Object.keys(requests).length === 0) && Object.keys(requests).map((key) => {
-              const nestedItem = requests[key];
-              i += 1;
-              return (
-                <TableRow
-                  key={key}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row" align="center">
-                    {i}
-                  </TableCell>
-                  <TableCell align="center">{nestedItem.cityFrom}</TableCell>
-                  <TableCell align="center">{nestedItem.cityTo}</TableCell>
-                  <TableCell align="center">{nestedItem.typeOfParcel || ' ' }</TableCell>
-                  <TableCell align="center">{nestedItem.date}</TableCell>
-                  <TableCell align="center">{nestedItem.description || ' '}</TableCell>
-                  <TableCell align="center">
-                    {' '}
-                    <Button className="button button-table" variant="contained" onClick={() => handleClickOpen(nestedItem, key)}>Update</Button>
-                  </TableCell>
-                  <TableCell align="right">
-                    {' '}
-                    <Button className="button button-table" variant="contained" onClick={() => { handleDispatcher(key); }}>Delete</Button>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            {requests.map((nestedItem, key) => (
+              <TableRow
+                key={nestedItem.id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row" align="center">
+                  {key + 1}
+                </TableCell>
+                <TableCell align="center">{nestedItem.cityFrom}</TableCell>
+                <TableCell align="center">{nestedItem.cityTo}</TableCell>
+                <TableCell align="center">{nestedItem.typeOfParcel || ' ' }</TableCell>
+                <TableCell align="center">{nestedItem.date}</TableCell>
+                <TableCell align="center">{nestedItem.description || ' '}</TableCell>
+                <TableCell align="center">
+                  {' '}
+                  <Button className="button button-table" variant="contained" onClick={() => handleClickOpen(nestedItem, nestedItem.id)}>Update</Button>
+                </TableCell>
+                <TableCell align="right">
+                  {' '}
+                  <Button className="button button-table" variant="contained" onClick={() => { handleDispatcher(nestedItem.id); }}>Delete</Button>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

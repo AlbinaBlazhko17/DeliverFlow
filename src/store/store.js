@@ -11,7 +11,7 @@ store.subscribe(() => {
   const state = store.getState();
   if (state.localData && state.localData.results) {
     const data = state.localData.results;
-    data.forEach((item) => {
+    Object.values(data).forEach((item) => {
       localStorage.setItem(item.id, JSON.stringify(item));
     });
   }

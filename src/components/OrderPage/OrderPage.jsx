@@ -1,11 +1,8 @@
 import { useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import FormLabel from '@mui/material/FormLabel';
-import { Button } from '@mui/material';
+import { TextField, FormLabel, Button } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import propTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import { addRequest, updateRequest } from '../../store/actions';
@@ -46,6 +43,7 @@ function OrderPage({ type = 'create', nestedItem, closeDialog }) {
       typeOfParcel,
       date,
       description,
+      dateOfCreation: new Date().toLocaleDateString('fr-FR'),
     };
 
     if (type === 'create') {
