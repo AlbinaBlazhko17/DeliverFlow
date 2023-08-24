@@ -71,28 +71,8 @@ const localData = createReducer(initialState, (builder) => {
 
       // return { ...state, results: updatedResults };
       const updatedItem = action.payload;
-
-      // Find the index of the item to be updated based on its ID
-      const updatedIndex = state.results.findIndex(
-        (item) => item.id === updatedItem.id
-      );
-
-      if (updatedIndex !== -1) {
-        // Create a new array with the updated item at the correct index
-        const updatedResults = [
-          ...state.results.slice(0, updatedIndex),
-          updatedItem,
-          ...state.results.slice(updatedIndex + 1),
-        ];
-
-        // Update the local storage
-        localStorage.setItem(updatedItem.id, JSON.stringify(updatedItem));
-
-        // Return the updated state with the new array of results
-        return { ...state, results: updatedResults };
-      }
-
-      // Return the current state if the item was not found
+      // Update the local storage
+      localStorage.setItem(updatedItem.id, JSON.stringify(updatedItem));
       return state;
     })
     .addCase(removeRequest, (state, action) => {

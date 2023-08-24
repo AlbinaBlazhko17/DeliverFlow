@@ -1,14 +1,16 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { TextField, FormLabel, Button } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import propTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
-import { addRequest, updateRequest } from '../../store/actions';
+import { addRequest, updateRequest, sortRequests } from '../../store/actions';
 import AlertDialog from '../AlertDialog/AlertDialog';
 
-function OrderPage({ type = 'create', nestedItem, closeDialog }) {
+function OrderPage({
+  type = 'create', nestedItem, closeDialog, sortType,
+}) {
   const dispatch = useDispatch();
   const [cityFrom, setCityFrom] = useState('');
   const [cityTo, setCityTo] = useState('');
@@ -16,6 +18,7 @@ function OrderPage({ type = 'create', nestedItem, closeDialog }) {
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
   const [open, setOpen] = useState(false);
+  const data = useSelector((state) => state.localData.results);
 
   useEffect(() => {
     if (nestedItem) {
@@ -52,7 +55,17 @@ function OrderPage({ type = 'create', nestedItem, closeDialog }) {
     }
     if (type === 'update') {
       const updatedItem = { ...nestedItem, ...newItem };
-      dispatch(updateRequest(updatedItem));
+      const updatedIndex = data.findIndex((item) => item.id === updatedItem.id);
+
+      if (updatedIndex !== -1) {
+        const updatedData = [
+          ...data.slice(0, updatedIndex),
+          updatedItem,
+          ...data.slice(updatedIndex + 1),
+        ];
+        dispatch(updateRequest(updatedItem));
+        dispatch(sortRequests({ sortType, requests: updatedData }));
+      }
     }
   };
 

@@ -19,7 +19,6 @@ function RequestsPage() {
   const [selected, setSelected] = useState({});
   const [sortType, setSortType] = useState('creation');
   const storeData = useSelector((state) => state.localData.results);
-  console.log(storeData);
 
   const handleClickOpen = (nestedItem, key) => {
     setSelected({ ...nestedItem, id: key });
@@ -36,11 +35,7 @@ function RequestsPage() {
   };
 
   useEffect(() => {
-    // if (Object.keys(requests).length === 0) {
     dispatch(sortRequests({ sortType, requests: storeData }));
-    // } else {
-    // dispatch(sortRequests({ sortType, requests }));
-    // }
   }, [dispatch, sortType]);
 
   useEffect(() => {
@@ -49,13 +44,16 @@ function RequestsPage() {
 
   useEffect(() => {
     if (
-      // !(Object.keys(storeData).length === 0)
       JSON.stringify(storeData) !== JSON.stringify(requests)
     ) {
       setRequests(storeData);
-      console.log('Updated');
+      // dispatch(sortRequests({ sortType: 'creation', requests: storeData }));
     }
   }, [storeData, requests]);
+
+  // useEffect(() => {
+  //   dispatch(sortRequests({ sortType: 'creation', requests: storeData }));
+  // }, [storeData]);
 
   const handleDispatcher = (key) => {
     dispatch(removeRequest(
@@ -138,7 +136,7 @@ function RequestsPage() {
           </TableBody>
         </Table>
       </TableContainer>
-      <UpdateDialog open={open} handleClose={handleClose} nestedItem={selected} />
+      <UpdateDialog open={open} handleClose={handleClose} nestedItem={selected} sortType={sortType} />
     </>
   );
 }

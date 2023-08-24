@@ -7,18 +7,20 @@ import DeliverPage from '../DeliverPage/DeliverPage';
 import OrderPage from '../OrderPage/OrderPage';
 
 function UpdateDialog(props) {
-  const { open, handleClose, nestedItem } = props;
+  const {
+    open, handleClose, nestedItem, sortType,
+  } = props;
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogContent>
         {
         nestedItem.type === 'order' && (
-        <OrderPage type="update" nestedItem={nestedItem} closeDialog={handleClose} />
+        <OrderPage type="update" nestedItem={nestedItem} closeDialog={handleClose} sortType={sortType} />
         )
       }
         {
           nestedItem.type === 'delivery' && (
-            <DeliverPage type="update" nestedItem={nestedItem} closeDialog={handleClose} />
+            <DeliverPage type="update" nestedItem={nestedItem} closeDialog={handleClose} sortType={sortType} />
           )
       }
       </DialogContent>
