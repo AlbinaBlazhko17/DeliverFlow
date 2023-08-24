@@ -4,6 +4,8 @@ import Header from '../Header/Header';
 import './App.css';
 
 function App() {
+  document.title = 'Deliver Flow';
+
   return (
     <>
       <Header />
