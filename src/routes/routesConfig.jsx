@@ -1,6 +1,7 @@
 import SelectTypePage from '../components/SelectTypePage/SelectTypePage';
 import RequestFormPage from '../components/RequestFormPage/RequestFormPage';
 import RequestsPage from '../components/RequestsPage/RequestsPage';
+import NotFoundPage from '../components/NotFoundPage/NotFoundPage';
 
 const routesConfig = [
   {
@@ -23,10 +24,10 @@ const routesConfig = [
     path: '/requests',
     element: <RequestsPage />,
   },
-  // {
-  //   path: '*',
-  //   element: <NotFoundPage />,
-  // },
+  {
+    path: '*',
+    element: <NotFoundPage />,
+  },
 ];
 
 export default routesConfig;
