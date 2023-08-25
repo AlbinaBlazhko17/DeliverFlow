@@ -1,24 +1,23 @@
-import CreatePage from '../components/CreatePage/CreatePage';
-import OrderPage from '../components/OrderPage/OrderPage';
-import DeliverPage from '../components/DeliverPage/DeliverPage';
+import SelectTypePage from '../components/SelectTypePage/SelectTypePage';
+import RequestFormPage from '../components/RequestFormPage/RequestFormPage';
 import RequestsPage from '../components/RequestsPage/RequestsPage';
 
 const routesConfig = [
   {
     path: '/',
-    element: <CreatePage />,
+    element: <SelectTypePage />,
   },
   {
     path: '/create',
-    element: <CreatePage />,
+    element: <SelectTypePage />,
   },
   {
     path: '/create/order',
-    element: <OrderPage />,
+    element: <RequestFormPage typeOfRequest="order" />,
   },
   {
     path: '/create/deliver',
-    element: <DeliverPage />,
+    element: <RequestFormPage typeOfRequest="deliver" />,
   },
   {
     path: '/requests',

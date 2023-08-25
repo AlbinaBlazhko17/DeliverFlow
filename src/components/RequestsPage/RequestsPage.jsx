@@ -47,13 +47,8 @@ function RequestsPage() {
       JSON.stringify(storeData) !== JSON.stringify(requests)
     ) {
       setRequests(storeData);
-      // dispatch(sortRequests({ sortType: 'creation', requests: storeData }));
     }
   }, [storeData, requests]);
-
-  // useEffect(() => {
-  //   dispatch(sortRequests({ sortType: 'creation', requests: storeData }));
-  // }, [storeData]);
 
   const handleDispatcher = (key) => {
     dispatch(removeRequest(

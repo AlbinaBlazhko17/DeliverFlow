@@ -9,7 +9,8 @@ import { isValid } from 'date-fns';
 import { addRequest, updateRequest, sortRequests } from '../../store/actions';
 import AlertDialog from '../AlertDialog/AlertDialog';
 
-function OrderPage({
+function RequestFormPage({
+  typeOfRequest,
   type, nestedItem, closeDialog, sortType,
 }) {
   const dispatch = useDispatch();
@@ -27,8 +28,8 @@ function OrderPage({
       setCityFrom(nestedItem.cityFrom);
       setCityTo(nestedItem.cityTo);
       setDate(nestedItem.date);
-      setTypeOfParcel(nestedItem.typeOfParcel);
-      setDescription(nestedItem.description);
+      setTypeOfParcel(nestedItem.typeOfParcel || '');
+      setDescription(nestedItem.description || '');
     }
   }, [nestedItem]);
 
@@ -41,15 +42,27 @@ function OrderPage({
   };
 
   const dispatchRequest = () => {
-    const newItem = {
-      type: 'order',
-      cityFrom,
-      cityTo,
-      typeOfParcel,
-      date,
-      description,
-      dateOfCreation: new Date().toLocaleDateString('fr-FR'),
-    };
+    let newItem = {};
+
+    if (typeOfRequest === 'order') {
+      newItem = {
+        typeOfRequest,
+        cityFrom,
+        cityTo,
+        typeOfParcel,
+        date,
+        description,
+        dateOfCreation: new Date().toLocaleDateString('fr-FR'),
+      };
+    } else {
+      newItem = {
+        typeOfRequest,
+        cityFrom,
+        cityTo,
+        date,
+        dateOfCreation: new Date().toLocaleDateString('fr-FR'),
+      };
+    }
 
     if (type === 'create' && error === false) {
       const newItemWithId = { ...newItem, id: uuidv4() };
@@ -100,7 +113,7 @@ function OrderPage({
         {' '}
         {type}
         {' '}
-        order
+        {typeOfRequest}
       </FormLabel>
       <TextField
         id="cityFrom"
@@ -118,52 +131,63 @@ function OrderPage({
         onInput={(e) => setCityTo(e.target.value)}
         required
       />
-      <TextField
-        id="typeOfParcel"
-        label="Type of parcel"
-        variant="filled"
-        value={typeOfParcel}
-        onInput={(e) => setTypeOfParcel(e.target.value)}
-      />
+      {
+          typeOfRequest === 'order' && (
+          <TextField
+            id="typeOfParcel"
+            label="Type of parcel"
+            variant="filled"
+            value={typeOfParcel || ''}
+            onChange={(e) => setTypeOfParcel(e.target.value || '')}
+          />
+          )
+       }
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           id="date"
           format="DD-MM-YYYY"
-          value={date || null}
           onChange={(newDate) => {
-            if (isValid(newDate)) {
-              const d = new Date(newDate).toLocaleDateString('fr-FR');
-              setDate(d);
+            const d = new Date(newDate);
+            if (isValid(d)) {
+              setDate(d.toLocaleDateString('fr-FR'));
               setError(false);
             } else {
               setError(true);
+              setDate(null);
             }
           }}
         />
       </LocalizationProvider>
-      <TextField
-        id="description"
-        label="Parcel description"
-        variant="filled"
-        multiline
-        rows={4}
-        value={description}
-        onInput={(e) => setDescription(e.target.value)}
-      />
+      {
+          typeOfRequest === 'order' && (
+          <TextField
+            id="description"
+            label="Parcel description"
+            variant="filled"
+            multiline
+            rows={4}
+            value={description || ''}
+            onChange={(e) => setDescription(e.target.value || '')}
+          />
+          )
+     }
+
       <Button className="button button-submit" variant="contained" type="submit">Submit</Button>
       <AlertDialog open={open} handleClose={handleClose} error={error} />
     </form>
   );
 }
 
-OrderPage.defaultProps = {
+RequestFormPage.defaultProps = {
+  typeOfRequest: 'order',
   type: 'create',
   nestedItem: {},
   closeDialog: null,
   sortType: 'creation',
 };
 
-OrderPage.propTypes = {
+RequestFormPage.propTypes = {
+  typeOfRequest: propTypes.string,
   type: propTypes.string,
   nestedItem: propTypes.shape({
     cityFrom: propTypes.string,
@@ -176,4 +200,4 @@ OrderPage.propTypes = {
   sortType: propTypes.string,
 };
 
-export default OrderPage;
+export default RequestFormPage;

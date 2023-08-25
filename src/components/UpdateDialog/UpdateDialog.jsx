@@ -4,8 +4,7 @@ import {
 } from '@mui/material';
 import propTypes from 'prop-types';
 import React from 'react';
-import DeliverPage from '../DeliverPage/DeliverPage';
-import OrderPage from '../OrderPage/OrderPage';
+import RequestFormPage from '../RequestFormPage/RequestFormPage';
 
 function UpdateDialog(props) {
   const {
@@ -16,12 +15,12 @@ function UpdateDialog(props) {
       <DialogContent>
         {
         nestedItem.type === 'order' && (
-        <OrderPage type="update" nestedItem={nestedItem} closeDialog={handleClose} sortType={sortType} />
+        <RequestFormPage typeOfRequest={nestedItem.type} type="update" nestedItem={nestedItem} closeDialog={handleClose} sortType={sortType} />
         )
       }
         {
           nestedItem.type === 'delivery' && (
-            <DeliverPage type="update" nestedItem={nestedItem} closeDialog={handleClose} sortType={sortType} />
+            <RequestFormPage typeOfRequest={nestedItem.type} type="update" nestedItem={nestedItem} closeDialog={handleClose} sortType={sortType} />
           )
       }
       </DialogContent>

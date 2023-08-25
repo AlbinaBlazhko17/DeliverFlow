@@ -1,10 +1,9 @@
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import { Button, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import './styles.scss';
 
-function CreatePage() {
+function SelectTypePage() {
   return (
     <div className="type__wrapper">
       <Typography
@@ -28,4 +27,4 @@ function CreatePage() {
   );
 }
 
-export default CreatePage;
+export default SelectTypePage;

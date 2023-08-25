@@ -39,9 +39,11 @@ export default function AlertDialog({ open, handleClose, error }) {
 AlertDialog.defaultProps = {
   open: false,
   handleClose: null,
+  error: false,
 };
 
 AlertDialog.propTypes = {
   open: propTypes.bool,
   handleClose: propTypes.func,
+  error: propTypes.bool,
 };
