@@ -3,24 +3,22 @@ import {
   DialogContent,
 } from '@mui/material';
 import propTypes from 'prop-types';
-import React from 'react';
 import RequestFormPage from '../RequestFormPage/RequestFormPage';
 
-function UpdateDialog(props) {
-  const {
-    open, handleClose, nestedItem, sortType,
-  } = props;
+function UpdateDialog({
+  open, handleClose, nestedItem, sortType,
+}) {
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogContent>
         {
-        nestedItem.type === 'order' && (
-        <RequestFormPage typeOfRequest={nestedItem.type} type="update" nestedItem={nestedItem} closeDialog={handleClose} sortType={sortType} />
+        nestedItem.typeOfRequest === 'order' && (
+        <RequestFormPage typeOfRequest={nestedItem.typeOfRequest} type="update" nestedItem={nestedItem} closeDialog={handleClose} sortType={sortType} />
         )
       }
         {
-          nestedItem.type === 'delivery' && (
-            <RequestFormPage typeOfRequest={nestedItem.type} type="update" nestedItem={nestedItem} closeDialog={handleClose} sortType={sortType} />
+          nestedItem.typeOfRequest === 'delivery' && (
+            <RequestFormPage typeOfRequest={nestedItem.typeOfRequest} type="update" nestedItem={nestedItem} closeDialog={handleClose} sortType={sortType} />
           )
       }
       </DialogContent>
@@ -39,6 +37,7 @@ UpdateDialog.propTypes = {
   open: propTypes.bool,
   handleClose: propTypes.func,
   nestedItem: propTypes.shape({
+    typeOfRequest: propTypes.string,
     cityFrom: propTypes.string,
     cityTo: propTypes.string,
     date: propTypes.string,

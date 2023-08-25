@@ -17,7 +17,7 @@ const routesConfig = [
   },
   {
     path: '/create/deliver',
-    element: <RequestFormPage typeOfRequest="deliver" />,
+    element: <RequestFormPage typeOfRequest="delivery" />,
   },
   {
     path: '/requests',

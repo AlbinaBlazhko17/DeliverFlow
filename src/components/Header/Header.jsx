@@ -22,7 +22,7 @@ function DrawerAppBar() {
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             <Link className="link" to="/create/order"><Button sx={{ color: '#5e5e5e' }}>Order</Button></Link>
-            <Link className="link" to="/create/deliver"><Button sx={{ color: '#5e5e5e' }}> Deliver </Button></Link>
+            <Link className="link" to="/create/deliver"><Button sx={{ color: '#5e5e5e' }}> Delivery </Button></Link>
             <Link className="link" to="/requests"><Button sx={{ color: '#5e5e5e' }}> Requests </Button></Link>
           </Box>
         </Toolbar>
